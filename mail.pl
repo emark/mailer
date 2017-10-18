@@ -6,8 +6,11 @@ use utf8;
 
 use Encode;
 use Mojo::UserAgent;
+use YAML::XS 'LoadFile';
 
+my $config = LoadFile('mail.yaml');
 my %rcpt = ();
+
 open (RCPT,"<", "rcpt.txt") || die "Can't open rcpt.txt file";
 	while(my $row = <RCPT>){
 		my($alias, $addr) = split('=',$row);
@@ -61,10 +64,10 @@ if ($subject || $body){
 		{
 			'Accept' => 'application/json',
 			'Content-Type' => 'application/json',
-			'X-Postmark-Server-Token' => '830d529a-a84e-4a11-8a12-dd8b590039b9',
+			'X-Postmark-Server-Token' => $config->{token},
 		} => json => 
 		{
-			from => 'mailbox@emrk.ru', 
+			from => $config->{from}, 
 			to => $to, 
 			subject => $subject,
 			htmlbody => $body,
