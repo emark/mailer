@@ -7,11 +7,12 @@ use utf8;
 use Encode;
 use Mojo::UserAgent;
 use YAML::XS 'LoadFile';
+use FindBin qw($Bin);
 
-my $config = LoadFile('mail.yaml');
+my $config = LoadFile("$Bin/mail.yaml");
 my %rcpt = ();
 
-open (RCPT,"<", "rcpt.txt") || die "Can't open rcpt.txt file";
+open (RCPT,"<", "$Bin/rcpt.txt") || die "Can't open rcpt.txt file";
 	while(my $row = <RCPT>){
 		my($alias, $addr) = split('=',$row);
 		chomp $addr;
