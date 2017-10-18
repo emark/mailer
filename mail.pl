@@ -71,6 +71,7 @@ if ($subject || $body){
 			to => $to, 
 			subject => $subject,
 			htmlbody => $body,
+			textbody => $body,
 		}
 	)->result;
 
