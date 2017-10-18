@@ -71,7 +71,6 @@ if ($subject || $body){
 			from => $config->{from}, 
 			to => $to, 
 			subject => $subject,
-			htmlbody => $body,
 			textbody => $body,
 		}
 	)->result;
