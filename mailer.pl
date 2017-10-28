@@ -9,7 +9,7 @@ use Mojo::UserAgent;
 use YAML::XS 'LoadFile';
 use FindBin qw($Bin);
 
-my $config = LoadFile("$Bin/mail.yaml");
+my $config = LoadFile("$Bin/mailer.yaml");
 my %rcpt = ();
 
 open (RCPT,"<", "$Bin/rcpt.txt") || die "Can't open rcpt.txt file";
@@ -27,9 +27,9 @@ if (keys %rcpt == 1){
 	$to = $rcpt{$alias[0]};
 
 }else{
-	print "Enter recipient.\n0 - list of aliases\nq - exit\n";
+	print "Enter recipient.\n0 - list of profiles\nq - exit\n";
 	while (!$to || !$rcpt{$to}){
-		print 'Alias: ';
+		print "\nProfile: ";
 		$to = <>;
 		chomp $to;
 		exit if ($to eq 'q');
