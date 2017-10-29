@@ -11,7 +11,7 @@ use FindBin qw($Bin $Script);
 
 $Script=~s/\.pl//;
 my $config = LoadFile("$Bin/$Script.yaml");
-my %rcpt = ();
+my %rcpt = (); #Recipients alias->address
 
 open (RCPT,"<", "$Bin/rcpt.txt") || die "Can't open rcpt.txt file";
 	while(my $row = <RCPT>){
@@ -22,6 +22,8 @@ open (RCPT,"<", "$Bin/rcpt.txt") || die "Can't open rcpt.txt file";
 close (RCPT);
 
 my $to = ''; 
+
+$to = $ARGV[0] if(@ARGV);
 
 if (keys %rcpt == 1){
 	my @alias = keys %rcpt;
@@ -35,34 +37,42 @@ if (keys %rcpt == 1){
 		chomp $to;
 		exit if ($to eq '/');
 		if ($to eq 0){
-			print "\n\nRecipient list\n";
+			print "\nRecipient list\n";
 			foreach my $key (keys %rcpt){
-				print "$key <$rcpt{$key}>\n";
+				print "$key\t<$rcpt{$key}>\n";
 
 			};
 		};
 	};
 	$to = $rcpt{$to};
-
 };
 
 print 'To: ';
 print $to;
 
-print "\nSubj.: ";
 
-my $subject = Encode::decode('utf8', <STDIN>);
-chop $subject;
 
-print 'Msg.: ';
+my $subject = '';
 my $body = '';
-my $msg = '';
-while($msg = <STDIN>){
-	last if ($msg eq ".\n");
-	$body = $body.Encode::decode('utf8', $msg);
 
+if ($ARGV[1]) {
+	$subject = $ARGV[1]; 
+	$subject = Encode::decode('utf8', $subject);
+
+}else{
+	print "\nSubj.: ";
+	$subject = Encode::decode('utf8', <STDIN>);
+	chop $subject;
+
+	print 'Msg.: ';
+	my $msg = '';
+	while($msg = <STDIN>){
+		last if ($msg eq ".\n");
+		$body = $body.Encode::decode('utf8', $msg);
+	};
+
+	chop $body;
 };
-chop $body;
 
 if ($subject || $body){
 
