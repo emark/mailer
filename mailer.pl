@@ -23,7 +23,7 @@ close (RCPT);
 
 my $to = ''; 
 
-$to = $ARGV[0] if(@ARGV);
+$to = $ARGV[0] if(@ARGV); #Check if has recipient in argument
 
 if (keys %rcpt == 1){
 	my @alias = keys %rcpt;
