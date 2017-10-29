@@ -28,13 +28,14 @@ if (keys %rcpt == 1){
 	$to = $rcpt{$alias[0]};
 
 }else{
-	print "Enter recipient.\n0 - list of profiles\nq - exit\n";
 	while (!$to || !$rcpt{$to}){
+		print "\nEnter recipient.\n[0] - list of profiles\n[/] - exit\n";	
 		print "\nProfile: ";
-		$to = <>;
+		$to = <STDIN>;
 		chomp $to;
-		exit if ($to eq 'q');
+		exit if ($to eq '/');
 		if ($to eq 0){
+			print "\n\nProfiles list\n";
 			foreach my $key (keys %rcpt){
 				print "$key <$rcpt{$key}>\n";
 
@@ -48,13 +49,19 @@ if (keys %rcpt == 1){
 print 'To: ';
 print $to;
 
-print "\nS: ";
+print "\nSubj.: ";
 
-my $subject = Encode::decode('utf8', <>);
+my $subject = Encode::decode('utf8', <STDIN>);
 chop $subject;
 
-print 'T: ';
-my $body = Encode::decode('utf8', <>);
+print 'Msg.: ';
+my $body;
+
+while(my $msg = <STDIN>){
+	last if ($msg eq ".\n");
+	$body = $body.Encode::decode('utf8', $msg);
+
+};
 chop $body;
 
 if ($subject || $body){
