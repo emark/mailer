@@ -7,9 +7,10 @@ use utf8;
 use Encode;
 use Mojo::UserAgent;
 use YAML::XS 'LoadFile';
-use FindBin qw($Bin);
+use FindBin qw($Bin $Script);
 
-my $config = LoadFile("$Bin/mailer.yaml");
+$Script=~s/\.pl//;
+my $config = LoadFile("$Bin/$Script.yaml");
 my %rcpt = ();
 
 open (RCPT,"<", "$Bin/rcpt.txt") || die "Can't open rcpt.txt file";
