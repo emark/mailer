@@ -50,8 +50,6 @@ if (keys %rcpt == 1){
 print 'To: ';
 print $to;
 
-
-
 my $subject = '';
 my $body = '';
 
