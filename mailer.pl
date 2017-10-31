@@ -10,10 +10,31 @@ use YAML::XS 'LoadFile';
 use FindBin qw($Bin $Script);
 
 $Script=~s/\.pl//;
-my $config = LoadFile("$Bin/$Script.yaml");
+my $config_file = "$Bin/$Script.yaml"; 
+my $config = {
+	token => 'xxx',
+	from => 'mail@from.ru',
+	recipients => 'rcpt.txt',
+};
+
+if (-f $config_file){
+	$config = LoadFile($config_file);
+}else{
+
+open (CONF, ">", $config_file) || die "Can't create configuration file: $config_file";
+	foreach my $key (keys %{$config}){
+		print CONF "$key: $config->{$key}\n";
+	};
+close CONF;
+
+print "Create default config file.\nPlease edit config file and run program once more.\n";
+exit;
+};
+
 my %rcpt = (); #Recipients alias->address
 
-open (RCPT,"<", "$Bin/rcpt.txt") || die "Can't open rcpt.txt file";
+#Loading recipients from list
+open (RCPT,"<", "$Bin/$config->{recipients}") || die "Can't open rcpt.txt file";
 	while(my $row = <RCPT>){
 		my($alias, $addr) = split('=',$row);
 		chomp $addr;
@@ -48,6 +69,7 @@ print $to;
 my $subject = '';
 my $body = '';
 
+#Check if subject taken from arguements
 if ($ARGV[1]) {
 	$subject = $ARGV[1]; 
 	$subject = Encode::decode('utf8', $subject);
