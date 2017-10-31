@@ -34,7 +34,7 @@ exit;
 my %rcpt = (); #Recipients alias->address
 
 #Loading recipients from list
-open (RCPT,"<", "$Bin/$config->{recipients}") || die "Can't open rcpt.txt file";
+open (RCPT,"<", "$Bin/$config->{recipients}") || die "Can't open $config->{recipients} file";
 	while(my $row = <RCPT>){
 		my($alias, $addr) = split('=',$row);
 		chomp $addr;
