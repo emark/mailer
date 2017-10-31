@@ -25,27 +25,22 @@ my $to = '';
 
 $to = $ARGV[0] if(@ARGV); #Check if has recipient in argument
 
-if (keys %rcpt == 1){
-	my @alias = keys %rcpt;
-	$to = $rcpt{$alias[0]};
+while (!$to || !$rcpt{$to}){
+	print "\nEnter recipient.\n[0] - show list\n[/] - exit\n";	
+	print "\nRecipient: ";
+	$to = <STDIN>;
+	chomp $to;
+	exit if ($to eq '/');
+	if ($to eq 0){
+		print "\nRecipient list\n";
+		foreach my $key (keys %rcpt){
+			print "$key\t<$rcpt{$key}>\n";
 
-}else{
-	while (!$to || !$rcpt{$to}){
-		print "\nEnter recipient.\n[0] - show list\n[/] - exit\n";	
-		print "\nRecipient: ";
-		$to = <STDIN>;
-		chomp $to;
-		exit if ($to eq '/');
-		if ($to eq 0){
-			print "\nRecipient list\n";
-			foreach my $key (keys %rcpt){
-				print "$key\t<$rcpt{$key}>\n";
-
-			};
 		};
 	};
-	$to = $rcpt{$to};
 };
+
+$to = $rcpt{$to};
 
 print 'To: ';
 print $to;
