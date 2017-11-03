@@ -12,8 +12,8 @@ use FindBin qw($Bin $Script);
 $Script=~s/\.pl//;
 my $config_file = "$Bin/$Script.yaml"; 
 my $config = {
-	token => 'xxx',
-	from => 'mail@from.ru',
+	token => 'xxxx-xxxx-xxxx',
+	from => 'mail@gmail.com',
 	recipients => 'rcpt.txt',
 };
 
@@ -33,7 +33,6 @@ exit;
 
 my %rcpt = (); #Recipients alias->address
 
-#Loading recipients from list
 open (RCPT,"<", "$Bin/$config->{recipients}") || die "Can't open $config->{recipients} file";
 	while(my $row = <RCPT>){
 		my($alias, $addr) = split('=',$row);
@@ -61,16 +60,13 @@ while (!$to || !$rcpt{$to}){
 	};
 };
 
-$to = $rcpt{$to};
-
 print 'To: ';
-print $to;
+print $rcpt{$to};
 
 my $subject = '';
 my $body = '';
 
-#Check if subject taken from arguements
-if ($ARGV[1]) {
+if ($ARGV[1]) { #Check if subject taken from arguements
 	$subject = $ARGV[1]; 
 	$subject = Encode::decode('utf8', $subject);
 
@@ -102,7 +98,7 @@ if ($subject || $body){
 		} => json => 
 		{
 			from => $config->{from}, 
-			to => $to, 
+			to => $rcpt{$to},
 			subject => $subject,
 			textbody => $body,
 		}
