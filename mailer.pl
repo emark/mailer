@@ -9,6 +9,7 @@ use Mojo::UserAgent;
 use YAML::XS 'LoadFile';
 use FindBin qw($Bin $Script);
 
+my $VERSION = '1.01';
 $Script=~s/\.pl//;
 my $config_file = "$Bin/$Script.yaml"; 
 my $config = {
@@ -17,6 +18,7 @@ my $config = {
 	recipients => 'rcpt.txt',
 };
 
+print "Mailer, v.$VERSION\n";
 if (-f $config_file){
 	$config = LoadFile($config_file);
 }else{
