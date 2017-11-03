@@ -9,7 +9,7 @@ use Mojo::UserAgent;
 use YAML::XS 'LoadFile';
 use FindBin qw($Bin $Script);
 
-my $VERSION = '1.01';
+my $VERSION = '1.02';
 $Script=~s/\.pl//;
 my $config_file = "$Bin/$Script.yaml"; 
 my $config = {
