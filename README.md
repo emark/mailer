@@ -1,3 +1,7 @@
+# Mailer
+
+This perl-script allows to send email from postmarkapp.com service.
+
 # Installation
 
 1. Edit .bashrc_aliases
