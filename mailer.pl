@@ -16,11 +16,20 @@ my $config = {
 	token => 'xxxx-xxxx-xxxx',
 	from => 'mail@gmail.com',
 	recipients => 'rcpt.txt',
+	codepage => 'utf8',
 };
 
 print "Mailer, v.$VERSION\n";
 if (-f $config_file){
-	$config = LoadFile($config_file);
+	my $check_config = LoadFile($config_file);
+	foreach my $key (keys %{$check_config}){
+		if(!$config->{$key}){
+			print "Checking for configuration file is false. Abort.";
+			exit;
+		};
+	};
+	$config = $check_config;
+
 }else{
 
 open (CONF, ">", $config_file) || die "Can't create configuration file: $config_file";
@@ -70,18 +79,18 @@ my $body = '';
 
 if ($ARGV[1]) { #Check if subject taken from arguements
 	$subject = $ARGV[1]; 
-	$subject = Encode::decode('utf8', $subject);
+	$subject = Encode::decode($config->{codepage}, $subject);
 
 }else{
 	print "\nSubj.: ";
-	$subject = Encode::decode('utf8', <STDIN>);
+	$subject = Encode::decode($config->{codepage}, <STDIN>);
 	chop $subject;
 
 	print 'Msg.: ';
 	my $msg = '';
 	while($msg = <STDIN>){
 		last if ($msg eq ".\n");
-		$body = $body.Encode::decode('utf8', $msg);
+		$body = $body.Encode::decode($config->{codepage}, $msg);
 	};
 
 	chop $body;
