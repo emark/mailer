@@ -46,8 +46,8 @@ my %rcpt = (); #Recipients alias->address
 
 open (RCPT,"<", "$Bin/$config->{recipients}") || die "Can't open $config->{recipients} file";
 	while(my $row = <RCPT>){
-		my($alias, $addr) = split('=',$row);
-		chomp $addr;
+		my ($alias, $addr) = split('=',$row);
+		chomp $addr if($addr);
 		$rcpt{$alias} = $addr;
 	};
 close (RCPT);
@@ -65,7 +65,7 @@ while (!$to || !$rcpt{$to}){
 	if ($to eq 0){
 		print "\nRecipient list\n";
 		foreach my $key (keys %rcpt){
-			print "$key\t<$rcpt{$key}>\n";
+			print "$key\t<$rcpt{$key}>\n" if ($rcpt{$key});
 
 		};
 	};
