@@ -3,4 +3,4 @@
 *.yaml
 *.old
 *.bak
-~*.*.swp
+.*
