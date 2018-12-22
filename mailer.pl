@@ -57,21 +57,21 @@ my $to = '';
 $to = $ARGV[0] if(@ARGV); #Check if has recipient in argument
 
 while (!$to || !$rcpt{$to}){
-	print "\nEnter recipient.\n[0] - show list\n[.] - exit\n";	
-	print "\nRecipient: ";
+	print "Recipient [$to] not found.\n" if ($to && !$rcpt{to});
+	print "\nRecipients\n";
+	foreach my $key (keys %rcpt){
+		print "$key\t<$rcpt{$key}>\n" if ($rcpt{$key});
+
+	};
+	print "\nEnter recipient or press [.] for quit\n";	
+	print "> ";
 	$to = <STDIN>;
 	chomp $to;
+	
 	exit if ($to eq '.');
-	if ($to eq 0){
-		print "\nRecipient list\n";
-		foreach my $key (keys %rcpt){
-			print "$key\t<$rcpt{$key}>\n" if ($rcpt{$key});
-
-		};
-	};
 };
 
-print 'To: ';
+print "\nTo: ";
 print $rcpt{$to};
 
 my $subject = '';
