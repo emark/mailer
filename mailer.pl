@@ -9,7 +9,7 @@ use Mojo::UserAgent;
 use YAML::XS 'LoadFile';
 use FindBin qw($Bin $Script);
 
-my $VERSION = '1.02';
+my $VERSION = '1.03';
 $Script=~s/\.pl//;
 my $config_file = "$Bin/$Script.yaml"; 
 my $config = {
@@ -56,71 +56,70 @@ my $to = '';
 
 $to = $ARGV[0] if(@ARGV); #Check if has recipient in argument
 
-while (!$to || !$rcpt{$to}){
-	print "Recipient [$to] not found.\n" if ($to && !$rcpt{to});
+if (!$to){
 	print "\nRecipients\n";
 	foreach my $key (keys %rcpt){
 		print "$key\t<$rcpt{$key}>\n" if ($rcpt{$key});
 
 	};
-	print "\nEnter recipient or press [.] for quit\n";	
-	print "> ";
-	$to = <STDIN>;
-	chomp $to;
-	
-	exit if ($to eq '.');
-};
-
-print "\nTo: ";
-print $rcpt{$to};
-
-my $subject = '';
-my $body = '';
-
-if ($ARGV[1]) { #Check if subject taken from arguements
-	$subject = $ARGV[1]; 
-	$subject = Encode::decode($config->{codepage}, $subject);
-
-}else{
-	print "\nSubj.: ";
-	$subject = Encode::decode($config->{codepage}, <STDIN>);
-	chop $subject;
-
-	print 'Msg.: ';
-	my $msg = '';
-	while($msg = <STDIN>){
-		last if ($msg eq ".\n");
-		$body = $body.Encode::decode($config->{codepage}, $msg);
+}else{ 
+	if (!$rcpt{$to}){
+		print "Recipient [$to] not found. Quit.\n";
+		exit;
 	};
 
-	chop $body;
-};
+	print "\nTo: ";
+	print $rcpt{$to};
 
-if ($subject || $body){
+	my $subject = '';
+	my $body = '';
 
-	$body = ' ' if (!$body);
+	if ($ARGV[1]) { #Check if subject taken from arguements
+		$subject = $ARGV[1]; 
+		$subject = Encode::decode($config->{codepage}, $subject);
+
+	}else{
+		print "\nSubj.: ";
+		$subject = Encode::decode($config->{codepage}, <STDIN>);
+		chop $subject;
+
+		print 'Msg.: ';
+		my $msg = '';
+		while($msg = <STDIN>){
+			last if ($msg eq ".\n");
+			$body = $body.Encode::decode($config->{codepage}, $msg);
+		};
+
+		chop $body;
+	};
+
+	if ($subject || $body){
+
+		$body = ' ' if (!$body);
 	
-	my $ua = Mojo::UserAgent->new;
-	my $tx = $ua->post('https://api.postmarkapp.com/email', 
-		{
-			'Accept' => 'application/json',
-			'Content-Type' => 'application/json',
-			'X-Postmark-Server-Token' => $config->{token},
-		} => json => 
-		{
-			from => $config->{from}, 
-			to => $rcpt{$to},
-			subject => $subject,
-			textbody => $body,
-		}
-	)->result;
+		my $ua = Mojo::UserAgent->new;
+		my $tx = $ua->post('https://api.postmarkapp.com/email', 
+			{
+				'Accept' => 'application/json',
+				'Content-Type' => 'application/json',
+				'X-Postmark-Server-Token' => $config->{token},
+			} => json => 
+			{
+				from => $config->{from}, 
+				to => $rcpt{$to},
+				subject => $subject,
+				textbody => $body,
+			}
+		)->result;
 
-	print "\nResult: ".$tx->message;
-}else{
+		print "\nResult: ".$tx->message;
+	}else{
 
-	print "Result: empty text";
+		print "Result: empty text";
+	};
+
+	print "\n";
+
 };
-
-print "\n";
 
 1;
