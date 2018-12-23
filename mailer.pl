@@ -62,6 +62,7 @@ if (!$to){
 		print "$key\t<$rcpt{$key}>\n" if ($rcpt{$key});
 
 	};
+	print "\n\nUsage: m [recipient] [subject]";
 }else{ 
 	if (!$rcpt{$to}){
 		print "Recipient [$to] not found. Quit.\n";
