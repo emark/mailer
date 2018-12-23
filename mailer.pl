@@ -19,7 +19,7 @@ my $config = {
 	codepage => 'utf8',
 };
 
-print "Mailer, v.$VERSION\n";
+#print "Mailer, v.$VERSION\n";
 if (-f $config_file){
 	my $check_config = LoadFile($config_file);
 	foreach my $key (keys %{$check_config}){
@@ -57,12 +57,11 @@ my $to = '';
 $to = $ARGV[0] if(@ARGV); #Check if has recipient in argument
 
 if (!$to){
-	print "\nRecipients\n";
 	foreach my $key (keys %rcpt){
 		print "$key\t<$rcpt{$key}>\n" if ($rcpt{$key});
 
 	};
-	print "\n\nUsage: m [recipient] [subject]";
+	print "\nUsage: m [recipient] [subject]\n";
 }else{ 
 	if (!$rcpt{$to}){
 		print "Recipient [$to] not found. Quit.\n";
