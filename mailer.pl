@@ -7,11 +7,10 @@ use utf8;
 use Encode;
 use Mojo::UserAgent;
 use YAML::XS 'LoadFile';
-use FindBin qw($Bin $Script);
+use FindBin qw($Bin);
 
 my $VERSION = '1.03';
-$Script=~s/\.pl//;
-my $config_file = "$Bin/$Script.yaml"; 
+my $config_file = "$Bin/config.yaml"; 
 my $config = {
 	token => 'xxxx-xxxx-xxxx',
 	from => 'mail@gmail.com',
@@ -64,7 +63,7 @@ if (!$to){
 	print "\nUsage: m [recipient] [subject]\n";
 }else{ 
 	if (!$rcpt{$to}){
-		print "Recipient [$to] not found. Quit.\n";
+		print "Recipient [$to] not found\n";
 		exit;
 	};
 
